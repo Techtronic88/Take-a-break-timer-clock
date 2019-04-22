@@ -6,9 +6,12 @@
 let countdown;
 const timerDisplay = document.querySelector('.display__time-left');
 const timeEnd = document.querySelector('.display__end-time');
+const timeButtons = document.querySelectorAll('[data-time]');
+const input = document.getElementById('custom')
 
 // This function does not run immediately, it has to wait for a second to lapse 
 function timer(seconds) {
+    clearInterval(countdown) // Clear out existing timer in queue. countdown still a variable therefore it will not give us error
     const now = Date.now();
     const then = now + seconds * 1000;
     displayTimeLeft(seconds);
@@ -40,12 +43,23 @@ timerDisplay.textContent = display;
 
 
 // You want this function to display THE ACTUAL TIME when the break will END: 
+// 
 function showSessionRestartTime(timestamp) {
 const end = new Date(timestamp);
 const hour = end.getHours();
+const hourConvert = `${hour > 12 ? hour - 12: hour}`
 const minute = end.getMinutes();
 console.log(hour, minute);
 timeEnd.textContent = `Be Back At ${hour}: ${minute < 10? '0': ''} ${minute}`;
-   
 }
 
+function startTimer(){
+    const seconds = parseInt(this.dataset.time); // Turning our timer seconds into a real number
+    timer(seconds);
+}
+
+timeButtons.forEach(button => button.addEventListener('click', startTimer))
+input.addEventListener('submit', function (e){
+    e.preventDefault()
+    console.log(this.input.value);
+})
